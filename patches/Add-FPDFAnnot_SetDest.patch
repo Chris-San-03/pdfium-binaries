@@ -1,0 +1,69 @@
+diff --git a/fpdfsdk/fpdf_annot.cpp b/fpdfsdk/fpdf_annot.cpp
+index 7c7d42044..def319c58 100644
+--- a/fpdfsdk/fpdf_annot.cpp
++++ b/fpdfsdk/fpdf_annot.cpp
+@@ -3,6 +3,7 @@
+ // found in the LICENSE file.
+ 
+ #include "public/fpdf_annot.h"
++#include "public/fpdfview.h"
+ 
+ #include <memory>
+ #include <sstream>
+@@ -1469,3 +1470,29 @@ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFAnnot_SetURI(FPDF_ANNOTATION annot,
+   action->SetNewFor<CPDF_String>("URI", uri, /*bHex=*/false);
+   return true;
+ }
++
++FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFAnnot_SetDest(FPDF_ANNOTATION annot,
++                                                      FPDF_PAGE page_dest,
++                                                      FS_FLOAT x,
++                                                      FS_FLOAT y,
++                                                      FS_FLOAT z) {
++
++  if (!page_dest || FPDFAnnot_GetSubtype(annot) != FPDF_ANNOT_LINK)
++    return false;
++
++  CPDF_Page* pPage = CPDFPageFromFPDFPage(page_dest);
++  if (!pPage)
++    return false;
++
++  RetainPtr<const CPDF_Dictionary> pDict = pPage->GetDict();
++  RetainPtr<CPDF_Dictionary> annot_dict =
++    GetMutableAnnotDictFromFPDFAnnotation(annot);
++  RetainPtr<CPDF_Array> dest_array =
++    annot_dict->SetNewFor<CPDF_Array>("Dest");
++  dest_array->AppendNew<CPDF_Reference>(pPage->GetDocument(), pDict->GetObjNum());
++  dest_array->AppendNew<CPDF_Name>("XYZ");
++  dest_array->AppendNew<CPDF_Number>(x);
++  dest_array->AppendNew<CPDF_Number>(y);
++  dest_array->AppendNew<CPDF_Number>(z);
++  return true;
++}
+diff --git a/public/fpdf_annot.h b/public/fpdf_annot.h
+index abcef6bc4..3ecd41431 100644
+--- a/public/fpdf_annot.h
++++ b/public/fpdf_annot.h
+@@ -968,6 +968,22 @@ FPDFAnnot_GetFormFieldExportValue(FPDF_FORMHANDLE hHandle,
+ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFAnnot_SetURI(FPDF_ANNOTATION annot,
+                                                      const char* uri);
+ 
++// Experimental API.
++// Add a XYZ Destination to |annot|, overwriting the existing Destination, if any.
++//
++//   annot   - handle to a link annotation.
++//   dest    - handle to the Destination page.
++//   x       - left coordinate
++//   y       - top coordinate
++//   z       - zoom factor
++//
++// Returns true if successful.
++FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFAnnot_SetDest(FPDF_ANNOTATION annot,
++                                                      FPDF_PAGE page_dest,
++                                                      FS_FLOAT x,
++                                                      FS_FLOAT y,
++                                                      FS_FLOAT z);
++
+ #ifdef __cplusplus
+ }  // extern "C"
+ #endif  // __cplusplus
