@@ -11,7 +11,17 @@ IS_DEBUG=${PDFium_IS_DEBUG:-false}
 mkdir -p "$BUILD"
 
 (
-  echo "is_debug = $IS_DEBUG"
+  echo "use_goma = false"
+  
+  # echo "is_debug = $IS_DEBUG"
+  if [ "$IS_DEBUG" == "true" ]; then
+    echo "is_official_build = true"
+  fi
+
+  echo 'use_custom_libcxx = false'
+  echo 'use_allocator_shim = false'
+  echo 'pdf_use_partition_alloc = false'
+  
   echo "pdf_is_standalone = true"
   echo "target_cpu = \"$TARGET_CPU\""
   echo "target_os = \"$OS\""
@@ -31,11 +41,7 @@ mkdir -p "$BUILD"
       echo "use_blink = true"
       [ "$ENABLE_V8" == "true" ] && [ "$TARGET_CPU" == "arm64" ] && echo 'arm_control_flow_integrity = "none"'
       ;;
-    linux)
-      echo 'use_allocator_shim = false'
-      ;;
     mac)
-      echo 'use_allocator_shim = false'
       echo 'mac_deployment_target = "10.13.0"'
       ;;
     wasm)
@@ -46,10 +52,12 @@ mkdir -p "$BUILD"
   esac
 
   case "$TARGET_LIBC" in
+    default)
+      echo 'is_clang = true'
+      echo 'clang_use_chrome_plugins = false'
     musl)
       echo 'is_musl = true'
       echo 'is_clang = false'
-      echo 'use_custom_libcxx = false'
       [ "$ENABLE_V8" == "true" ] && case "$TARGET_CPU" in
         arm)
             echo "v8_snapshot_toolchain = \"//build/toolchain/linux:clang_x86_v8_arm\""
