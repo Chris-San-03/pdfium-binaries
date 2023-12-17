@@ -16,6 +16,7 @@ mkdir -p "$BUILD"
   if [ "$IS_DEBUG" == "false" ]; then
     echo "is_official_build = true"
     echo "chrome_pgo_phase = 0"
+    echo "is_cfi = false"
   fi
   
   echo "is_debug = $IS_DEBUG"
