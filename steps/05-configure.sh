@@ -15,7 +15,7 @@ mkdir -p "$BUILD"
   echo "is_debug = $IS_DEBUG"
   
   if [ "$IS_DEBUG" == "false" ]; then
-    echo "symbol_level = 0"
+    echo "symbol_level = 1"
     echo "dcheck_always_on = false"
     echo "use_thin_lto = true"
     echo "thin_lto_enable_optimizations = true"
