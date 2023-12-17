@@ -21,9 +21,9 @@ mkdir -p "$BUILD"
     echo "thin_lto_enable_optimizations = true"
   fi
   
-  echo 'use_custom_libcxx = false'
-  echo 'use_allocator_shim = false'
-  echo 'pdf_use_partition_alloc = false'
+  # echo 'use_custom_libcxx = false'
+  # echo 'use_allocator_shim = false'
+  # echo 'pdf_use_partition_alloc = false'
   
   echo "pdf_is_standalone = true"
   echo "target_cpu = \"$TARGET_CPU\""
