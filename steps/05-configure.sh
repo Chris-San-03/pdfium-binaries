@@ -15,9 +15,6 @@ mkdir -p "$BUILD"
   echo "is_debug = $IS_DEBUG"
   
   if [ "$IS_DEBUG" == "false" ]; then
-    echo "is_official_build = true"
-    echo "chrome_pgo_phase = 0"
-    echo "is_cfi = false"
     echo "symbol_level = 0"
     echo "dcheck_always_on = false"
     echo "use_thin_lto = true"
