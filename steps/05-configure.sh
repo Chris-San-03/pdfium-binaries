@@ -14,7 +14,7 @@ mkdir -p "$BUILD"
   echo "use_goma = false"
   
   # echo "is_debug = $IS_DEBUG"
-  if [ "$IS_DEBUG" == "true" ]; then
+  if [ "$IS_DEBUG" == "false" ]; then
     echo "is_official_build = true"
   fi
 
