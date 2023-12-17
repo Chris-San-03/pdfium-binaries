@@ -12,6 +12,11 @@ mkdir -p "$BUILD"
 
 (
   echo "use_goma = false"
+
+  if [ "$IS_DEBUG" == "false" ]; then
+    echo "is_official_build = true"
+    echo "chrome_pgo_phase = 0"
+  fi
   
   echo "is_debug = $IS_DEBUG"
   echo "dcheck_always_on = false"
