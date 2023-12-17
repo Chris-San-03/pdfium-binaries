@@ -12,17 +12,18 @@ mkdir -p "$BUILD"
 
 (
   echo "use_goma = false"
-
+  echo "is_debug = $IS_DEBUG"
+  
   if [ "$IS_DEBUG" == "false" ]; then
     echo "is_official_build = true"
     echo "chrome_pgo_phase = 0"
     echo "is_cfi = false"
+    echo "symbol_level = 0"
+    echo "dcheck_always_on = false"
+    echo "use_thin_lto = true"
+    echo "thin_lto_enable_optimizations = true"
   fi
   
-  echo "is_debug = $IS_DEBUG"
-  echo "dcheck_always_on = false"
-  echo "use_thin_lto = true"
-  echo "thin_lto_enable_optimizations = true"
   echo 'use_custom_libcxx = false'
   echo 'use_allocator_shim = false'
   echo 'pdf_use_partition_alloc = false'
