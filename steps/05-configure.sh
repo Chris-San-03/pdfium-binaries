@@ -55,6 +55,7 @@ mkdir -p "$BUILD"
     default)
       echo 'is_clang = true'
       echo 'clang_use_chrome_plugins = false'
+      ;;
     musl)
       echo 'is_musl = true'
       echo 'is_clang = false'
